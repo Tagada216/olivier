@@ -31,7 +31,7 @@
                   v-bind="attrs"
                   v-on="on"
                   @click.stop="dialog = true"
-                  @click:append-outer="getFilm"
+                  @click:append-outer="getFilm(unfilm.id)"
                 >
                   {{ unfilm.title }}
                   <br />
@@ -92,6 +92,9 @@ export default {
     return {
       dialog: false,
       films: null,
+      message: null,
+      selection: null,
+      movieTemp: null,
       movie: null
     };
   },
@@ -105,9 +108,12 @@ export default {
   },
   methods: {
     async getFilm(index) {
-      const movieTemp = await axios.get(
-        `https://api.themoviedb.org/3/movie/${index.id}?api_key=ad3aba60a11eb6e43170e9c6ec0d00e6&language=fr-Fr`
-      );
+      await axios
+        .get(
+          `https://api.themoviedb.org/3/movie/${index}?api_key=ad3aba60a11eb6e43170e9c6ec0d00e6&language=fr-Fr`
+        )
+        .then(response => (this.movieTemp = response.data.items));
+      console.log("c'est le film choisi", this.movie);
       this.movie = movieTemp.data.results;
     }
   }
